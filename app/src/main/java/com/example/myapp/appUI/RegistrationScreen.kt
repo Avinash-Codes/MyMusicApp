@@ -36,13 +36,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
 import com.example.myapp.R
 import com.example.myapp.viewModel.AuthViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 
 @Composable
-fun SignUpScreen(viewModel: AuthViewModel) {
+fun SignUpScreen(viewModel: AuthViewModel, navController: NavHostController) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -172,6 +173,7 @@ fun SignUpScreen(viewModel: AuthViewModel) {
         viewModel.registrationStatus.observe(LocalLifecycleOwner.current) { isSuccess ->
             if (isSuccess) {
                 Toast.makeText(context, "Registration successful", Toast.LENGTH_SHORT).show()
+                navController.navigate("DashBoardScreen")
             } else {
                 Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
             }
@@ -179,6 +181,7 @@ fun SignUpScreen(viewModel: AuthViewModel) {
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(text = "Already have an account?", modifier = Modifier.clickable {
+            navController.navigate("LoginScreen")
 
         })
 

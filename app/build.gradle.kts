@@ -80,5 +80,11 @@ dependencies {
     implementation ("androidx.navigation:navigation-compose:2.8.1")
     implementation("com.google.firebase:firebase-firestore-ktx:24.5.0")
     implementation("com.google.android.gms:play-services-recaptcha:16.0.0")
+    implementation("com.google.firebase:firebase-auth-ktx:22.0.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.0")
+    
+
 }
+
+
 apply(plugin = "com.google.gms.google-services")

@@ -34,12 +34,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
 import com.example.myapp.R
 import com.example.myapp.viewModel.AuthViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel) {
+fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -166,6 +167,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
         }
         Spacer(modifier = Modifier.height(32.dp))
         Text(text = "Forgot Password?", modifier = Modifier.clickable {
+            navController.navigate("ForgetPasswordScreen")
         })
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -211,6 +213,7 @@ fun LoginScreen(viewModel: AuthViewModel) {
         viewModel.googleSignInStatus.observe(LocalLifecycleOwner.current) { isSuccess ->
             if (isSuccess) {
                 Toast.makeText(context, "Google Sign-In successful", Toast.LENGTH_SHORT).show()
+                navController.navigate("DashboardScreen")
             } else {
                 Toast.makeText(context, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
             }

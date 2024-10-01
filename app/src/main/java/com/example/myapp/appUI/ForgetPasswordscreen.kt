@@ -25,10 +25,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavHostController
 import com.example.myapp.viewModel.AuthViewModel
 
 @Composable
-fun ForgetPasswordScreen(viewModel: AuthViewModel) {
+fun ForgetPasswordScreen(viewModel: AuthViewModel, navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var emailExists by remember { mutableStateOf(false) }
     var showPasswordFields by remember { mutableStateOf(false) }

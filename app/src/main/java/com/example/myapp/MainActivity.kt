@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.myapp.Navigation.AppNav
 
-import com.example.composelearning.AppUI.LoginScreen
-import com.example.composelearning.AppUI.SignUpScreen
 import com.example.myapp.appUI.ForgetPasswordScreen
 
 import com.example.myapp.viewModel.AuthViewModel
@@ -18,8 +19,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-
-            ForgetPasswordScreen(viewModel = AuthViewModel(application))
+            val navController = rememberNavController()
+            val viewModel: AuthViewModel = viewModel()
+            AppNav(navController, viewModel)
         }
     }
 }
