@@ -1,4 +1,4 @@
-package com.example.myapp.appUI
+package com.example.myapp.appUI.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

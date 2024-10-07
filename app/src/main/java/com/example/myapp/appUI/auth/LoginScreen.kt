@@ -1,4 +1,4 @@
-package com.example.composelearning.AppUI
+package com.example.myapp.appUI.auth
 
 import android.app.Activity
 import android.content.Intent
@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -137,30 +138,30 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavHostController) {
 
             }
         }
-
+        val loginStatus by viewModel.loginStatus.observeAsState()
         viewModel.loginStatus.observe(LocalLifecycleOwner.current) { isSuccess ->
-            if (isSuccess) {
-                Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-            } else {
-                // Handle different cases for incorrect email or password
-                when {
-                    // Check if the email is valid and the user doesn't exist
-                    !email.isNullOrEmpty() && !password.isNullOrEmpty() -> {
-                        Toast.makeText(context, "Incorrect email or password", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    // Check if the email is empty
-                    email.isNullOrEmpty() -> {
-                        Toast.makeText(context, "Email does not match", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    else -> {
-                        Toast.makeText(
-                            context,
-                            "Account does not exist, please create an account",
-                            Toast.LENGTH_SHORT
-                        )
+            if (loginStatus != null) {
+                if (loginStatus == true) {
+                    Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate("DashBoardScreen")
+            }  else {
+                    // Handle different cases for incorrect email or password
+                    when {
+                        !email.isNullOrEmpty() && !password.isNullOrEmpty() -> {
+                            Toast.makeText(context, "Incorrect email or password", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        email.isNullOrEmpty() -> {
+                            Toast.makeText(context, "Email does not match", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        else -> {
+                            Toast.makeText(
+                                context,
+                                "Account does not exist, please create an account",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

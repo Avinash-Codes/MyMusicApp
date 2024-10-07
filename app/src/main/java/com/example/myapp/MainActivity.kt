@@ -8,20 +8,23 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.myapp.Navigation.AppNav
 
-import com.example.myapp.appUI.ForgetPasswordScreen
-
 import com.example.myapp.viewModel.AuthViewModel
+import com.example.myapp.viewModel.ProfileUpdateViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
+        Firebase.initialize(this)
 
         setContent {
             val navController = rememberNavController()
             val viewModel: AuthViewModel = viewModel()
-            AppNav(navController, viewModel)
+            val authviewModel: ProfileUpdateViewModel = viewModel()
+            AppNav(navController, viewModel, authviewModel, contentResolver )
+
         }
     }
 }

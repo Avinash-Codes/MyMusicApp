@@ -1,13 +1,13 @@
 package com.example.myapp.viewModel
 
 
+
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,6 +32,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
+    private val _googleSignInStatus = MutableLiveData<Boolean>()
+    val googleSignInStatus: LiveData<Boolean> get() = _googleSignInStatus
     private val googleSignInClient: GoogleSignInClient
 
     private val _emailExists = MutableLiveData<Boolean>()
@@ -39,9 +41,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     val registrationStatus = MutableLiveData<Boolean>()
     private val _loginStatus = MutableLiveData<Boolean>()
     val loginStatus: LiveData<Boolean> get() = _loginStatus
-    val googleSignInStatus = MutableLiveData<Boolean>()
     var isEmailSent = false // To track whether an email has already been sent
-
 
     init {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -52,12 +52,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         googleSignInClient = GoogleSignIn.getClient(application, gso)
     }
 
-
     fun registerUser(name: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = hashMapOf("name" to name, "email" to email, "password" to password)
+                    val user = hashMapOf("name" to name, "email" to email)
                     firestore.collection("users").document(auth.currentUser!!.uid).set(user)
                         .addOnSuccessListener {
                             registrationStatus.value = true
@@ -82,26 +81,23 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     when (task.exception) {
                         is FirebaseAuthInvalidUserException -> {
                             // The email does not exist
-                            _loginStatus.value = false // Handle this in the UI
+                            _loginStatus.value = false
                         }
-
                         is FirebaseAuthInvalidCredentialsException -> {
                             // The password is incorrect
-                            _loginStatus.value = false // Handle this in the UI
+                            _loginStatus.value = false
                         }
-
                         else -> {
-                            _loginStatus.value = false // Other errors
+                            _loginStatus.value = false
                         }
                     }
                 }
             }
-
     }
 
     fun googleSignIn(launcher: ManagedActivityResultLauncher<Intent, ActivityResult>) {
         val signInIntent: Intent = googleSignInClient.signInIntent
-        launcher.launch(signInIntent) // Launch the sign-in intent using the provided launcher
+        launcher.launch(signInIntent)
     }
 
     fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
@@ -118,7 +114,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                         )
                         firestore.collection("users").document(auth.currentUser!!.uid).set(user)
                             .addOnSuccessListener {
-                                // User registered successfully
                                 _loginStatus.value = true
                             }
                             .addOnFailureListener {
@@ -133,7 +128,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Check if email exists in Fire store
     fun checkUserEmail(email: String) {
         viewModelScope.launch {
             try {
@@ -141,7 +135,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     .whereEqualTo("email", email)
                     .get()
                     .await()
-
                 _emailExists.value = !querySnapshot.isEmpty
             } catch (e: Exception) {
                 _emailExists.value = false
@@ -149,69 +142,48 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
-    // Variable to track the last password reset email sent time (for debouncing)
     var lastPasswordResetClickTime: Long = 0
 
-    // Send password reset email only if it hasn't been sent already
     fun sendPasswordResetEmail(email: String, onResult: (Boolean, String?) -> Unit) {
-        // Get the current time
         val currentTime = System.currentTimeMillis()
-
-        // Check if the password reset was requested within the last 2 seconds (debouncing)
         if (currentTime - lastPasswordResetClickTime < 2000) {
-            // If the request was sent too quickly, return without sending another email
             onResult(false, "Please wait before requesting another password reset.")
             return
         }
-
-        // Update the last request time to the current time
         lastPasswordResetClickTime = currentTime
-
-        // Use Coroutine to send the email asynchronously
         viewModelScope.launch {
             try {
-                // Send password reset email
                 auth.sendPasswordResetEmail(email).await()
-                // Success callback
                 onResult(true, null)
             } catch (e: FirebaseTooManyRequestsException) {
-                // Handle Firebase rate limiting exception
                 onResult(false, "Too many requests. Please try again later.")
             } catch (e: Exception) {
-                // Handle other exceptions
                 onResult(false, e.message)
             }
         }
     }
 
-
-
     fun updateUserPassword(oldPassword: String, newPassword: String, onResult: (Boolean) -> Unit) {
         val user = auth.currentUser
         if (user != null) {
-            // Re-authenticate the user with the old password
             val credential = EmailAuthProvider.getCredential(user.email!!, oldPassword)
-
             user.reauthenticate(credential).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     user.updatePassword(newPassword).addOnCompleteListener { updateTask ->
                         if (updateTask.isSuccessful) {
-                            onResult(true) // Success
+                            onResult(true)
                         } else {
-                            onResult(false) // Failure
+                            onResult(false)
                         }
                     }
                 } else {
-                    onResult(false) // Re-authentication failed
+                    onResult(false)
                 }
             }
         } else {
-            onResult(false) // User not logged in or error
+            onResult(false)
         }
     }
+
+
 }
-
-
-
-

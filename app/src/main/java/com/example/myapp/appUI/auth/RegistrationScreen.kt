@@ -1,4 +1,4 @@
-package com.example.composelearning.AppUI
+package com.example.myapp.appUI.auth
 
 import android.app.Activity
 import android.content.Intent

@@ -1,19 +1,23 @@
 package com.example.myapp.Navigation
 
+import MusicDashboard
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.composelearning.AppUI.LoginScreen
-import com.example.composelearning.AppUI.SignUpScreen
-import com.example.myapp.appUI.DashBoardScreen
-import com.example.myapp.appUI.ForgetPasswordScreen
+import com.example.myapp.appUI.auth.LoginScreen
+import com.example.myapp.appUI.auth.SignUpScreen
+import com.example.myapp.appUI.auth.ForgetPasswordScreen
+import com.example.myapp.ui.AnimatedSplashScreen
 import com.example.myapp.viewModel.AuthViewModel
 
 @Composable
-fun AppNav(navController: NavHostController, viewModel: AuthViewModel){
-    NavHost(navController = navController, startDestination = "RegistrationScreen") {
-            composable("RegistrationScreen") {
+fun AppNav(navController: NavHostController, viewModel: AuthViewModel,  ){
+    NavHost(navController = navController, startDestination = "SplashScreen") {
+            composable("SplashScreen"){
+                AnimatedSplashScreen(navController)
+            }
+            composable("SignUp") {
                 SignUpScreen(viewModel,navController)
             }
             composable("LoginScreen"){
@@ -22,9 +26,10 @@ fun AppNav(navController: NavHostController, viewModel: AuthViewModel){
             composable("ForgetPasswordScreen") {
                 ForgetPasswordScreen(viewModel,navController)
             }
-        composable("DashBoardScreen"){
-            DashBoardScreen(viewModel,navController)
-        }
+            composable("DashBoardScreen"){
+                MusicDashboard(navController)
+            }
+
 
         }
     }
