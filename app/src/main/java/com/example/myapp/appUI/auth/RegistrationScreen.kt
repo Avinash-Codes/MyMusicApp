@@ -160,10 +160,15 @@ fun SignUpScreen(viewModel: AuthViewModel, navController: NavHostController) {
         //BUTTON Section
         Button(
             onClick = {
-                if (password == confirmPassword) {
-                    viewModel.registerUser(name, email, password)
+                if(email.isEmpty()||password.isEmpty()||name.isEmpty()||confirmPassword.isEmpty()) {
+                    Toast.makeText(context, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+
                 }else {
-                    Toast.makeText(context, "Password do not match", Toast.LENGTH_SHORT).show()
+                    if (password == confirmPassword) {
+                        viewModel.registerUser(name, email, password)
+                    } else {
+                        Toast.makeText(context, "Password do not match", Toast.LENGTH_SHORT).show()
+                    }
                 }
             },
             enabled = !emailError && !passwordError
