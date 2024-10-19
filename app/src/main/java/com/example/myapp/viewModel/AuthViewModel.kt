@@ -45,7 +45,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(application.getString(R.string.default_web_client_id)) // Replace with your web client ID
+            .requestIdToken(application.getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 

@@ -1,3 +1,5 @@
+package com.example.myapp.ui
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,9 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.myapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,19 +28,18 @@ fun MusicDashboard(navController: NavController) {
 
     var isPlaying by remember { mutableStateOf(false) } // State to control NowPlayingBar visibility
 
-
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "MusicApp", fontSize = 24.sp, fontWeight = FontWeight.Bold) },
                 actions = {
-                    IconButton(onClick = { /* TODO: Navigate to Search */ }) {
+                    IconButton(onClick = {
+                        navController.navigate("SearchScreen")
+                    }) {
                         Icon(Icons.Filled.Search, contentDescription = "Search")
                     }
                     IconButton(onClick = {
                         navController.navigate("ProfileScreen")
-
                     }) {
                         Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile")
                     }
@@ -48,9 +47,11 @@ fun MusicDashboard(navController: NavController) {
             )
         }
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -64,7 +65,12 @@ fun MusicDashboard(navController: NavController) {
                 // Categories Section
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Your Playlists", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp))
+                    Text(
+                        "Your Playlists",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
                 item {
                     PlaylistRow()
@@ -72,7 +78,12 @@ fun MusicDashboard(navController: NavController) {
 
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Recently Played", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp))
+                    Text(
+                        "Recently Played",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
                 item {
                     RecentlyPlayedRow()
@@ -80,7 +91,12 @@ fun MusicDashboard(navController: NavController) {
 
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Trending Now", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp))
+                    Text(
+                        "Trending Now",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
                 item {
                     TrendingMusicRow()
@@ -88,7 +104,12 @@ fun MusicDashboard(navController: NavController) {
 
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "Bhojpuri Songs", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp))
+                    Text(
+                        text = "Bhojpuri Songs",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
                 item {
                     BhojpuriSongsRow()
@@ -146,7 +167,7 @@ fun PlaylistRow() {
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(5) {  // Sample playlists
+        items(5) {   // Pass song to PlaylistCard
             PlaylistCard()
         }
     }
@@ -160,7 +181,7 @@ fun PlaylistCard() {
             .background(Color.Gray, shape = MaterialTheme.shapes.medium),
         contentAlignment = Alignment.Center
     ) {
-        Text("Playlist", color = Color.White)
+        Text("Play Songs", color = Color.Red, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -171,8 +192,8 @@ fun RecentlyPlayedRow() {
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(5) {  // Sample recently played tracks
-            PlaylistCard()
+        items(5) {
+            PlaylistCard()  // Sample data
         }
     }
 }
@@ -184,12 +205,11 @@ fun BhojpuriSongsRow() {
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(5) {
-            MusicCard() // Pass the song data to MusicCard
+        items(5) {  // Sample recently played tracks
+            MusicCard() // Sample data
         }
     }
 }
-
 
 @Composable
 fun TrendingMusicRow() {
@@ -198,7 +218,7 @@ fun TrendingMusicRow() {
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(5) { // Sample trending songs
+        items(5) {
             PlaylistCard()
         }
     }
@@ -212,7 +232,7 @@ fun MusicCard() {
             .background(Color.Gray, shape = MaterialTheme.shapes.medium),
         contentAlignment = Alignment.Center
     ) {
-        Text("Song", color = Color.White)
+        Text("Play", color = Color.White)
     }
 }
 

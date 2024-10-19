@@ -1,5 +1,6 @@
 package com.example.myapp
 
+import SearchViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val viewModel: AuthViewModel = viewModel()
-            AppNav(navController, viewModel, )
+            val searchViewModel: SearchViewModel = viewModel()
+            AppNav(navController, viewModel, searchViewModel)
 
         }
     }
