@@ -20,8 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val viewModel: AuthViewModel = viewModel()
-            val searchViewModel: SearchViewModel = viewModel()
-            AppNav(navController, viewModel, searchViewModel)
+            AppNav(navController, viewModel())
 
         }
     }

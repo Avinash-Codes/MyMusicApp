@@ -9,11 +9,10 @@ import com.example.myapp.appUI.auth.SignUpScreen
 import com.example.myapp.appUI.auth.ForgetPasswordScreen
 import com.example.myapp.ui.AnimatedSplashScreen
 import com.example.myapp.ui.MusicDashboard
-import com.example.myapp.ui.SearchScreen
 import com.example.myapp.viewModel.AuthViewModel
 
 @Composable
-fun AppNav(navController: NavHostController, viewModel: AuthViewModel, searchViewModel: SearchViewModel){
+fun AppNav(navController: NavHostController, viewModel: AuthViewModel,){
     NavHost(navController = navController, startDestination = "SplashScreen") {
             composable("SplashScreen"){
                 AnimatedSplashScreen(navController)
@@ -30,9 +29,7 @@ fun AppNav(navController: NavHostController, viewModel: AuthViewModel, searchVie
             composable("DashBoardScreen"){
                 MusicDashboard(navController)
             }
-            composable("SearchScreen"){
-                SearchScreen(searchViewModel, navController)
-            }
+
 
 
 
